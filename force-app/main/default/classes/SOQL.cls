@@ -28,7 +28,9 @@ public with sharing class SOQL {
 	 * Update the corresponding test class and testGetAllLeads method to cover this method
 	 */
 	public static List<Lead> returnLeadList() {
-		List<Lead> leadList = [SELECT Id, LastName, Company, Phone, Email FROM Lead];
+		List<Lead> leadList = [SELECT Id, LastName, Company, Phone, Email 
+							   FROM Lead 
+							   LIMIT 200];
 
 		return leadList;
 	}
@@ -43,7 +45,8 @@ public with sharing class SOQL {
 	public static List<Contact> returnContactList(){
 		List<Contact> contactList = [SELECT Id, FirstName, LastName, Name
 									 FROM Contact 
-									 WHERE FirstName = 'John'];
+									 WHERE FirstName = 'John'
+									 LIMIT 200];
 
 		return contactList;
 	}
@@ -59,7 +62,8 @@ public with sharing class SOQL {
 		List<Id> listOfIDs = new List<Id>();
 		List<Contact> listOfContacts = [SELECT Id
 									    FROM Contact
-									    WHERE LastName = 'Smith' OR LastName = 'Jones'];
+									    WHERE LastName = 'Smith' OR LastName = 'Jones'
+										LIMIT 200];
 
 		for (Contact myContact : listOfContacts) {
 			listOfIDs.add(myContact.Id);
@@ -83,7 +87,8 @@ public with sharing class SOQL {
 	public static List<Opportunity> returnListOfOpps(String accountId){
 		List<Opportunity> listOfOpportunities = [SELECT Id, Name, StageName, Description, AccountId, CloseDate, Amount
 												 FROM Opportunity 
-												 WHERE AccountId = :accountId AND StageName = 'Closed Won'];
+												 WHERE AccountId = :accountId AND StageName = 'Closed Won'
+												 LIMIT 200];
 
 		return listOfOpportunities;
 	}
