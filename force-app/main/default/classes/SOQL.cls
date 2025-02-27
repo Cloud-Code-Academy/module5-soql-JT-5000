@@ -40,9 +40,13 @@ public with sharing class SOQL {
 	 * @return A list of Contact records.
 	 * Update the corresponding test class and testGetContactsByFirstName method to cover this method
 	 */
-	//[public | private ] [static] data_type method_name (input parameters) {
-	//  The body of the method
-	//}
+	public static List<Contact> returnContactList(){
+		List<Contact> contactList = [SELECT Id, FirstName, LastName, Name
+									 FROM Contact 
+									 WHERE FirstName = 'John'];
+
+		return contactList;
+	}
 
 	/**
 	 * Question 3
@@ -51,9 +55,18 @@ public with sharing class SOQL {
 	 * @return A list of Contact Ids.
 	 * Update the corresponding test class and testGetContactIdsByLastName method to cover this method
 	 */
-	//[public | private ] [static] data_type method_name (input parameters) {
-	//  The body of the method
-	//}
+	public static List<Id> returnContactIdsForLastNameOfSmithOrJones() {
+		List<Id> listOfIDs = new List<Id>();
+		List<Contact> listOfContacts = [SELECT Id
+									    FROM Contact
+									    WHERE LastName = 'Smith' OR LastName = 'Jones'];
+
+		for (Contact myContact : listOfContacts) {
+			listOfIDs.add(myContact.Id);
+		}
+		return listOfIDs;
+
+	}
 
 	/**
 	 * Question 4
@@ -67,6 +80,13 @@ public with sharing class SOQL {
 	//[public | private ] [static] data_type method_name (input parameters) {
 	//  The body of the method
 	//}
+	public static List<Opportunity> returnListOfOpps(String accountId){
+		List<Opportunity> listOfOpportunities = [SELECT Id, Name, StageName, Description, AccountId, CloseDate, Amount
+												 FROM Opportunity 
+												 WHERE AccountId = :accountId AND StageName = 'Closed Won'];
+
+		return listOfOpportunities;
+	}
 
 	/**
 	 * Question 5
@@ -78,6 +98,12 @@ public with sharing class SOQL {
 	//[public | private ] [static] data_type method_name (input parameters) {
 	//  The body of the method
 	//}
+	public static Integer totalAccountRecordCount(){
+		Integer totalCount = [SELECT COUNT()
+							  FROM Account];
+		System.debug(JSON.serializePretty(totalCount));
+		return totalCount;
+	}
 
 	/**
 	 * Question 6
