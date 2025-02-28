@@ -120,6 +120,13 @@ public with sharing class SOQL {
 	//[public | private ] [static] data_type method_name (input parameters) {
 	//  The body of the method
 	//}
+	public static Map<Id,Task> returnTaskMap(){
+		Map<Id,Task> taskIdToTaskMap = new Map<Id,Task>(
+			[SELECT Id FROM Task WHERE ActivityDate = NEXT_N_DAYS:7 LIMIT 200]
+		);
+
+		return taskIdToTaskMap;
+	}
 
 	/**
 	 * Question 7
@@ -131,6 +138,19 @@ public with sharing class SOQL {
 	//[public | private ] [static] data_type method_name (input parameters) {
 	//  The body of the method
 	//}
+	public static List<Contact> returnListOfContacts(){
+		List<Contact> contactsWithDomainList = [SELECT Id, Email, Name 
+												FROM Contact 
+												WHERE Email 
+												LIKE '%example.com'
+												LIMIT 200];
+
+		if(contactsWithDomainList.isEmpty()){
+			return null;
+		}else{
+			return contactsWithDomainList;
+		}
+	}
 
 	/**
 	 * Question 8
@@ -140,7 +160,14 @@ public with sharing class SOQL {
 	 * @return A list of Opportunity records.
 	 */
 	public static List<Opportunity> getOpportunitiesByNameKeyword(String keyword) {
-		return null; // Replace null with the variable you used to store the result
+		String wildCardKeyword = '%' + keyword + '%';
+		List<Opportunity> oppsWithKeywordList = [SELECT Id, Name, StageName, CloseDate, AccountId
+												 FROM Opportunity
+												 WHERE Name 
+												 LIKE :wildCardKeyword
+												 LIMIT 200];
+
+		return oppsWithKeywordList;
 	}
 
 	/**
@@ -149,7 +176,11 @@ public with sharing class SOQL {
 	 * @return A list of Case records.
 	 */
 	public static List<Case> getFilterCaseOrigins() {
-		return null; // Replace null with the variable you used to store the result
+		List<Case> caseOriginNotWebOrEmailList = [SELECT Id, Origin
+												  FROM Case
+												  WHERE Origin NOT IN ('Web', 'Email', '')];
+
+		return caseOriginNotWebOrEmailList;
 	}
 
 	/**
@@ -165,6 +196,16 @@ public with sharing class SOQL {
 	//[public | private ] [static] data_type method_name (input parameters) {
 	//  The body of the method
 	//}
+	public static List<Lead> returnLeadList(String leadSourceValue, String titleValue){
+		String leadSourceString = '%' + leadSourceValue + '%';
+		String titleValueString = '%' + titleValue + '%';
+		List<Lead> leadsWithSourceAndTitleValueList = [SELECT Id, LastName, Phone, Company, Email, LeadSource, Title
+													   FROM Lead
+													   WHERE LeadSource LIKE :leadSourceString 
+													   OR Title LIKE  :titleValueString];
+
+		return leadsWithSourceAndTitleValueList;
+	}
 
 	/**
 	 * Question 11
