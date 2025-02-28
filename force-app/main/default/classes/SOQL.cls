@@ -178,7 +178,8 @@ public with sharing class SOQL {
 	public static List<Case> getFilterCaseOrigins() {
 		List<Case> caseOriginNotWebOrEmailList = [SELECT Id, Origin
 												  FROM Case
-												  WHERE Origin NOT IN ('Web', 'Email', '')];
+												  WHERE Origin NOT IN ('Web', 'Email', '')
+												  LIMIT 200];
 
 		return caseOriginNotWebOrEmailList;
 	}
@@ -202,7 +203,8 @@ public with sharing class SOQL {
 		List<Lead> leadsWithSourceAndTitleValueList = [SELECT Id, LastName, Phone, Company, Email, LeadSource, Title
 													   FROM Lead
 													   WHERE LeadSource LIKE :leadSourceString 
-													   OR Title LIKE  :titleValueString];
+													   OR Title LIKE  :titleValueString
+													   LIMIT 200];
 
 		return leadsWithSourceAndTitleValueList;
 	}
