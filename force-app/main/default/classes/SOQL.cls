@@ -27,9 +27,13 @@ public with sharing class SOQL {
 	 * @return List of all leads with Id, LastName, Company, Phone, Email
 	 * Update the corresponding test class and testGetAllLeads method to cover this method
 	 */
-	//[public | private ] [static] data_type method_name (input parameters) {
-	//  The body of the method
-	//}
+	public static List<Lead> returnLeadList() {
+		List<Lead> leadList = [SELECT Id, LastName, Company, Phone, Email 
+							   FROM Lead 
+							   LIMIT 200];
+
+		return leadList;
+	}
 
 	/**
 	 * Question 2
@@ -38,9 +42,14 @@ public with sharing class SOQL {
 	 * @return A list of Contact records.
 	 * Update the corresponding test class and testGetContactsByFirstName method to cover this method
 	 */
-	//[public | private ] [static] data_type method_name (input parameters) {
-	//  The body of the method
-	//}
+	public static List<Contact> returnContactList(){
+		List<Contact> contactList = [SELECT Id, FirstName, LastName, Name
+									 FROM Contact 
+									 WHERE FirstName = 'John'
+									 LIMIT 200];
+
+		return contactList;
+	}
 
 	/**
 	 * Question 3
@@ -49,9 +58,19 @@ public with sharing class SOQL {
 	 * @return A list of Contact Ids.
 	 * Update the corresponding test class and testGetContactIdsByLastName method to cover this method
 	 */
-	//[public | private ] [static] data_type method_name (input parameters) {
-	//  The body of the method
-	//}
+	public static List<Id> returnContactIdsForLastNameOfSmithOrJones() {
+		List<Id> listOfIDs = new List<Id>();
+		List<Contact> listOfContacts = [SELECT Id
+									    FROM Contact
+									    WHERE LastName = 'Smith' OR LastName = 'Jones'
+										LIMIT 200];
+
+		for (Contact myContact : listOfContacts) {
+			listOfIDs.add(myContact.Id);
+		}
+		return listOfIDs;
+
+	}
 
 	/**
 	 * Question 4
@@ -65,6 +84,14 @@ public with sharing class SOQL {
 	//[public | private ] [static] data_type method_name (input parameters) {
 	//  The body of the method
 	//}
+	public static List<Opportunity> returnListOfOpps(String accountId){
+		List<Opportunity> listOfOpportunities = [SELECT Id, Name, StageName, Description, AccountId, CloseDate, Amount
+												 FROM Opportunity 
+												 WHERE AccountId = :accountId AND StageName = 'Closed Won'
+												 LIMIT 200];
+
+		return listOfOpportunities;
+	}
 
 	/**
 	 * Question 5
@@ -76,6 +103,12 @@ public with sharing class SOQL {
 	//[public | private ] [static] data_type method_name (input parameters) {
 	//  The body of the method
 	//}
+	public static Integer totalAccountRecordCount(){
+		Integer totalCount = [SELECT COUNT()
+							  FROM Account];
+		System.debug(JSON.serializePretty(totalCount));
+		return totalCount;
+	}
 
 	/**
 	 * Question 6
@@ -87,6 +120,13 @@ public with sharing class SOQL {
 	//[public | private ] [static] data_type method_name (input parameters) {
 	//  The body of the method
 	//}
+	public static Map<Id,Task> returnTaskMap(){
+		Map<Id,Task> taskIdToTaskMap = new Map<Id,Task>(
+			[SELECT Id FROM Task WHERE ActivityDate = NEXT_N_DAYS:7 LIMIT 200]
+		);
+
+		return taskIdToTaskMap;
+	}
 
 	/**
 	 * Question 7
@@ -98,6 +138,19 @@ public with sharing class SOQL {
 	//[public | private ] [static] data_type method_name (input parameters) {
 	//  The body of the method
 	//}
+	public static List<Contact> returnListOfContacts(){
+		List<Contact> contactsWithDomainList = [SELECT Id, Email, Name 
+												FROM Contact 
+												WHERE Email 
+												LIKE '%example.com'
+												LIMIT 200];
+
+		if(contactsWithDomainList.isEmpty()){
+			return null;
+		}else{
+			return contactsWithDomainList;
+		}
+	}
 
 	/**
 	 * Question 8
@@ -107,7 +160,14 @@ public with sharing class SOQL {
 	 * @return A list of Opportunity records.
 	 */
 	public static List<Opportunity> getOpportunitiesByNameKeyword(String keyword) {
-		return null; // Replace null with the variable you used to store the result
+		String wildCardKeyword = '%' + keyword + '%';
+		List<Opportunity> oppsWithKeywordList = [SELECT Id, Name, StageName, CloseDate, AccountId
+												 FROM Opportunity
+												 WHERE Name 
+												 LIKE :wildCardKeyword
+												 LIMIT 200];
+
+		return oppsWithKeywordList;
 	}
 
 	/**
@@ -116,7 +176,12 @@ public with sharing class SOQL {
 	 * @return A list of Case records.
 	 */
 	public static List<Case> getFilterCaseOrigins() {
-		return null; // Replace null with the variable you used to store the result
+		List<Case> caseOriginNotWebOrEmailList = [SELECT Id, Origin
+												  FROM Case
+												  WHERE Origin NOT IN ('Web', 'Email', '')
+												  LIMIT 200];
+
+		return caseOriginNotWebOrEmailList;
 	}
 
 	/**
@@ -132,6 +197,17 @@ public with sharing class SOQL {
 	//[public | private ] [static] data_type method_name (input parameters) {
 	//  The body of the method
 	//}
+	public static List<Lead> returnLeadList(String leadSourceValue, String titleValue){
+		String leadSourceString = '%' + leadSourceValue + '%';
+		String titleValueString = '%' + titleValue + '%';
+		List<Lead> leadsWithSourceAndTitleValueList = [SELECT Id, LastName, Phone, Company, Email, LeadSource, Title
+													   FROM Lead
+													   WHERE LeadSource LIKE :leadSourceString 
+													   OR Title LIKE  :titleValueString
+													   LIMIT 200];
+
+		return leadsWithSourceAndTitleValueList;
+	}
 
 	/**
 	 * Question 11
