@@ -344,7 +344,7 @@ public with sharing class SOQLTest {
 		}
 	}
 
-	@IsTest
+	@IsTest // Question #11
 	static void testGetContactNamesByAccount() {
 		// Create test data
 		// Generate random number of accounts and contacts between 1 and 10
@@ -391,7 +391,7 @@ public with sharing class SOQLTest {
 		}
 	}
 
-	@IsTest
+	@IsTest // Question #12
 	static void testGetTotalRevenueByStage() {
 		// Create test data
 		Opportunity testOpp1 = new Opportunity(
@@ -428,7 +428,7 @@ public with sharing class SOQLTest {
 		System.assertEquals(expectedRevenue, totalRevenue, 'Total revenue is incorrect.');
 	}
 
-	@IsTest
+	@IsTest //Question #13
 	static void testGetFirstTenAccounts() {
 		// Create test data
 		List<Account> accounts = new List<Account>();
@@ -452,7 +452,7 @@ public with sharing class SOQLTest {
 		}
 	}
 
-	@IsTest
+	@IsTest //Question #14
 	static void testGetHighValueOpportunities() {
 		// Create test data
 		Account testAccount = new Account(Name = 'Test Account');
@@ -488,7 +488,7 @@ public with sharing class SOQLTest {
 		}
 	}
 
-	@IsTest
+	@IsTest //Question #15
 	static void testGetBirthdateContacts() {
 		// Create test data
 		List<Contact> contacts = new List<Contact>();

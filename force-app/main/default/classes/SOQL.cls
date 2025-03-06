@@ -218,15 +218,17 @@ public with sharing class SOQL {
 	 */
 	public static List<String> getContactNamesByAccount(Id accountId) {
 		// Create a list to hold the Contact LastNames
+		List<Contact> contactList = [SELECT Id, LastName 
+										  FROM Contact
+										  WHERE AccountId = :accountId];
 
-		// Query the Contacts
-		// Loop through each Contact and add the LastName to the list
-		//for () {
-		//
-		//}
+		List<String> lastNameList = new List<String>();
 
-		// Return the list of Contact LastNames
-		return null; // Replace null with the variable you used to store the result
+		for (Contact contact : contactList) {
+			lastNameList.add(contact.LastName);
+		}
+
+		return lastNameList;
 	}
 
 	/**
@@ -238,9 +240,17 @@ public with sharing class SOQL {
 	 */
 	public static Decimal getTotalRevenueByStage(String stage) {
 		// Use AggregateQuery to get the total revenue
+		List<AggregateResult> oppAggregateResult = [SELECT SUM(Amount)
+									 FROM Opportunity
+									 WHERE StageName = :stage OR Amount > 10000];
 
-		// Return the total revenue
-		return null; // Replace null with the variable you used to store the result
+		Decimal totalRevenue = 0;
+
+		for (AggregateResult result : oppAggregateResult) {
+			Object amount = result.get('expr0');
+			totalRevenue = (Decimal)amount;
+		}
+		return totalRevenue; 
 	}
 
 	/**
@@ -249,7 +259,13 @@ public with sharing class SOQL {
 	 * @return A list of the first 10 Accounts ordered by Name.
 	 */
 	public static List<Account> getFirstTenAccounts() {
-		return null; // Replace null with the variable you used to store the result
+		List<Account> accountList = [SELECT Id, Name
+									 FROM Account
+									 ORDER BY Name
+									 LIMIT 10 ];
+									 System.debug(accountList);
+
+									 return accountList;
 	}
 
 	/**
@@ -258,7 +274,14 @@ public with sharing class SOQL {
 	 * @return A list of Opportunities with an Amount greater than 100,000, ordered by CloseDate, and limited to 5 records.
 	 */
 	public static List<Opportunity> getHighValueOpportunities() {
-		return null; // Replace null with the variable you used to store the result
+		List<Opportunity> opportunityList = [SELECT Id, Amount, CloseDate
+											 FROM Opportunity
+											 WHERE Amount > 100000
+											 ORDER BY CloseDate
+											 LIMIT 5];
+		System.debug(JSON.serializePretty(opportunityList));
+
+		return opportunityList;
 	}
 
 	/**
@@ -267,7 +290,12 @@ public with sharing class SOQL {
 	 * @return A list of Contacts
 	 */
 	public static List<Contact> getBirthdateContacts() {
-		return null; // Replace null with the variable you used to store the result
+		List<Contact> contactList = [SELECT Id, Birthdate
+									 FROM Contact
+									 ORDER BY Birthdate DESC 
+									 LIMIT 3];
+		System.debug(JSON.serializePretty(contactList));
+		return contactList;
 	}
 
 	/**
