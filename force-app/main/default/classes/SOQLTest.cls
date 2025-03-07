@@ -517,7 +517,7 @@ public with sharing class SOQLTest {
 		}
 	}
 
-	@IsTest
+	@IsTest //Question #16
 	static void testGetCasesWithStatus() {
 		// Create test data
 		List<Case> cases = new List<Case>();
