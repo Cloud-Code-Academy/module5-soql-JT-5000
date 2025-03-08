@@ -467,19 +467,42 @@ public with sharing class SOQL {
 	 * @param List of cloned Opportunity Ids
 	 */
 	public static void cloneLineItems(Id origOppId, List<Id> cloneOppIds) {
-		// Query the original Opportunity Line Items
+		if (cloneOppIds.isEmpty()) {
+			//Quit and go home
+			return;
+		}
 
-		// Create a list to hold the new line items
+		// Query the original Opportunity Line Items
+		List<OpportunityLineItem> oppLineItems = [SELECT Id, PricebookEntryId, UnitPrice
+												  FROM OpportunityLineItem
+												  WHERE OpportunityId = :origOppId];
+
+		if (oppLineItems.isEmpty()) {
+			//Quit and go home
+			return;
+		}
 
 		// Generate a random number between 1 and 3
+		Integer randomNumber = Integer.valueOf(Math.floor(Math.random() * 3)) +1;
+
+		List<OpportunityLineItem> newListOfLineItems = new List<OpportunityLineItem>();
 
 		// Loop through each cloned Opportunity Id
+		for (Id id : cloneOppIds) {
+			for (OpportunityLineItem lineItem : oppLineItems) {
 
-		// Loop through each original line item
+				OpportunityLineItem newOppLineItem = new OpportunityLineItem();
 
-		// Clone the original line item and add the random number to the quantity
+				newOppLineItem.Quantity = randomNumber;
+				newOppLineItem.OpportunityId = id;
+				newOppLineItem.PricebookEntryId = lineItem.PricebookEntryId;
+				newOppLineItem.UnitPrice = lineItem.UnitPrice;
+				newListOfLineItems.add(newOppLineItem);
+			}
+		}
 
-		// Insert the new line items
+		Database.insert(newListOfLineItems);
+
 	}
 
 	/**
@@ -488,7 +511,11 @@ public with sharing class SOQL {
 	 * @return A list of filtered Opportunity
 	 */
 	public static List<Opportunity> getOpportunityDetailsForClosedWon() {
-		return null; // Replace null with the variable you used to store the result
+		List<Opportunity> oppList = [SELECT Name, Account.Name, Owner.Name
+									 FROM Opportunity
+									 WHERE StageName = 'Closed Won'];
+
+		return oppList;
 	}
 
 	/**
@@ -498,17 +525,33 @@ public with sharing class SOQL {
 	 */
 	public static void setPrimaryContact() {
 		//Use the getOpportunityDetailsForClosedWon() method to get the Opportunities
+		List<Opportunity> oppList = getOpportunityDetailsForClosedWon();
 
 		// Create a set of Account Ids from the Opportunities
+		Set<Id> accountIdSet = new Set<Id>();
+
+		for (Opportunity opp : oppList) {
+			accountIdSet.add(opp.AccountId);
+		}
 
 		// Query the Contacts
+		List<Contact> contactList = [SELECT Id, FirstName, LastName, Account.Id
+									 FROM Contact
+									 WHERE AccountId IN :accountIdSet];
+									 //Should I sort this list by FirstName in order to prepare for contacts to be overwritten in the map below?
 
 		// Loop through each Contact and add the Account Id and Contact to the map
+		Map<Id, Contact> idToContactMap = new Map<Id, Contact>();
+		for (Contact eachContact : contactList) {
+			idToContactMap.put(eachContact.AccountId, eachContact);
+		}
 
 		// Loop through each Opportunity
-
+		for (Opportunity opp : oppList) {
+			opp.Primary_Contact__c = idToContactMap.get(opp.AccountId).Id;
+		}
 		// Update the Opportunity primary contact from accountToContactMap
-
+		Database.update(oppList);
 		// Update the Opportunities
 	}
 }
