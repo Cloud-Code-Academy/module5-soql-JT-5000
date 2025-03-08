@@ -368,7 +368,14 @@ public with sharing class SOQL {
 	 * @return The Account Name of the Contact.
 	 */
 	public static String getAccountNameForContact(String contactId) {
-		return null; // Replace null with the variable you used to store the result
+
+		//example of an up query
+		List<Contact> contactList = [SELECT Id, Account.Name
+									 FROM Contact
+									 WHERE Id = :contactId];
+		System.debug(contactList[0].Account.Name);
+
+		return contactList[0].Account.Name;
 	}
 
 	/**
@@ -379,7 +386,16 @@ public with sharing class SOQL {
 	 * @return An Account record with related Opportunities.
 	 */
 	public static Account getAccountAndOpportunitiesFromAccountId(Id accountId) {
-		return null; // Replace null with the variable you used to store the result
+
+		List<Account> listOfAccounts = [SELECT 
+											Id, 
+											Name, 
+											(SELECT Id FROM Opportunities)
+										FROM Account
+										WHERE Id = :accountId];
+
+		System.debug(JSON.serializePretty(listOfAccounts));
+		return listOfAccounts[0];
 	}
 
 	/**

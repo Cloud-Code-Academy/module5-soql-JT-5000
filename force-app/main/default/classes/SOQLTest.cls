@@ -619,7 +619,7 @@ public with sharing class SOQLTest {
 		}
 	}
 
-	@IsTest
+	@IsTest //Question #19
 	static void testGetAccountNameForContact() {
 		// Create test data
 		Account testAccount1 = new Account(Name = 'Test Account 1');
@@ -635,7 +635,7 @@ public with sharing class SOQLTest {
 		System.assertEquals('Test Account 1', accountName, 'Returned account name is incorrect.');
 	}
 
-	@IsTest
+	@IsTest //Question #20
 	static void testGetAccountAndOpportunitiesFromAccountId() {
 		// Create test data
 		Account testAccount1 = new Account(Name = 'Test Account 1');
