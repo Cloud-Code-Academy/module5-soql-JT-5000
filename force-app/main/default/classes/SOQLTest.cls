@@ -550,7 +550,7 @@ public with sharing class SOQLTest {
 		System.assertEquals(cases[5].Id, returnedCases[0].Id, 'First case returned is not the 6th case created.');
 	}
 
-	@IsTest
+	@IsTest //Question #17
 	static void testGetCaseIdsByAccount() {
 		// Create test data
 		// Generate random number of accounts and cases between 1 and 10
@@ -595,7 +595,7 @@ public with sharing class SOQLTest {
 		}
 	}
 
-	@IsTest
+	@IsTest //Question #18
 	static void testGetAccountIdsToNamesNotInCountry() {
 		// Create test data
 		Account testAccount1 = new Account(Name = 'Test Account 1', BillingCountry = 'United States');

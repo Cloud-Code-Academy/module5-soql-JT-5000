@@ -322,14 +322,17 @@ public with sharing class SOQL {
 	 */
 	public static Set<Id> getCaseIdsByAccount(Id accountId) {
 		// Create a set to hold the Case Ids
+		Set<Id> setOfIDs = new Set<Id>();
 
-		// Query the Cases
-		// Loop through each Case and add the Id to the set
-		//for () {
-		//
-		//}
+		List<Case> listOfCases = [SELECT Id 
+						 FROM Case
+						 WHERE AccountId = :accountId];
 
-		return null; // Replace null with the variable you used to store the result
+		for (Case singleCase : listOfCases) {
+			setOfIDs.add(singleCase.Id);
+		}
+
+		return setOfIDs; 
 	}
 
 	/**
@@ -344,9 +347,17 @@ public with sharing class SOQL {
 		Map<Id, String> accountIdsToNames = new Map<Id, String>();
 
 		// Query the Accounts
-		// Loop through each Account and add the Id and Name to the map
+		List<Account> accountsNotInCountryList = [SELECT Id, Name, BillingCountry
+												  FROM Account 
+												  WHERE BillingCountry != :country];
 
-		return null; // Replace null with the variable you used to store the result
+		// Loop through each Account and add the Id and Name to the map
+		for (Account acct : accountsNotInCountryList) {
+			accountIdsToNames.put(acct.Id, acct.Name);
+			System.debug(accountIdsToNames);
+		}
+
+		return accountIdsToNames; // Replace null with the variable you used to store the result
 	}
 
 	/**
