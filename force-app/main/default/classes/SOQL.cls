@@ -390,7 +390,7 @@ public with sharing class SOQL {
 		List<Account> listOfAccounts = [SELECT 
 											Id, 
 											Name, 
-											(SELECT Id FROM Opportunities)
+											(SELECT Id, Name FROM Opportunities)
 										FROM Account
 										WHERE Id = :accountId];
 
