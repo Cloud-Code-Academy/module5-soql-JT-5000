@@ -407,11 +407,19 @@ public with sharing class SOQL {
 	 */
 	public static List<Contact> getAccountsWithContactsByState(Id accountId) {
 		// Query the Account
+		Account singleAccount = [SELECT Id, BillingState
+								 FROM Account 
+								 WHERE Id = :accountId];
 
 		// Store the Account's BillingState
+		String accountBillingState = singleAccount.BillingState;
 
 		// Query the Contacts
-		return null; // Replace null with the variable you used to store the result
+		List<Contact> relatedContactsList = [SELECT Id, MailingState
+											 FROM Contact
+											 WHERE MailingState = :accountBillingState];
+
+		return relatedContactsList; 
 	}
 
 	/**
@@ -424,19 +432,30 @@ public with sharing class SOQL {
 	 */
 	public static List<Account> findAccountsByLeadEmailDomains(Set<Id> leadIds) {
 		// Query the Leads
+		List<Lead> leadList = [SELECT Id, Email
+							   FROM Lead 
+							   WHERE Id IN :leadIds 
+							   AND Email != null];
 
 		// Create a set of email domains from the Leads
+		Set<String> emailDomainSet = new Set<String>();
 
-		// Loop through each Lead
+		for (Lead eachLead : leadList) {
+			emailDomainSet.add(eachLead.Email.substringAfter('@').toLowerCase());
+		}
+		
+		Set<String> createWebAddressSet = new Set<String>();
 
-		// Get the email from the Lead
+		for (String domain : emailDomainSet) {
+			createWebAddressSet.add(domain);
+			createWebAddressSet.add('www.' + domain);
+		}
 
-		// Check if the email is not null
-
-		// Add the email domain to the set
-
-		// Query the Accounts
-		return null; // Replace null with the variable you used to store the result
+		List<Account> accountList = [SELECT Id, Name, Website
+									 FROM Account
+									 WHERE Website IN :createWebAddressSet];
+		
+		return accountList;
 	}
 
 	/**

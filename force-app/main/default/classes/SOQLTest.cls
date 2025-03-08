@@ -673,7 +673,7 @@ public with sharing class SOQLTest {
 		}
 	}
 
-	@IsTest
+	@IsTest //Question 21
 	static void testGetAccountsWithContactsByState() {
 		// Create test data
 		// Generate random number of accounts and contacts between 1 and 10
@@ -721,7 +721,7 @@ public with sharing class SOQLTest {
 		);
 	}
 
-	@IsTest
+	@IsTest //Question #22
 	static void testFindAccountsByLeadEmailDomains() {
 		// Create test data
 		// Generate random number of leads between 1 and 10
